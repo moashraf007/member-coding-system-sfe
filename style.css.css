@@ -1,0 +1,112 @@
+/* تخصيص الخطوط */
+body {
+    font-family: 'Tajawal', sans-serif;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* الحاوية الرئيسية */
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    background-color: #fafafa; /* خلفية بيضاء ولكن أغمق قليلاً */
+    border-radius: 15px;
+    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* العنوان الرئيسي */
+h1 {
+    text-align: center;
+    color: #B71C1C; /* الأحمر الداكن */
+    margin-bottom: 30px;
+    font-size: 2.5em;
+}
+
+/* العناوين */
+label {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* الحقول */
+input, select {
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 20px;
+    border: 2px solid #B71C1C; /* الأحمر الداكن */
+    background-color: #B71C1C;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+/* تأثير عند التركيز على الحقول */
+input:focus, select:focus {
+    outline: none;
+    border-color: #9E1B1B;
+    background-color: #9E1B1B;
+}
+
+/* الأزرار */
+button {
+    padding: 10px;
+    font-size: 16px;
+    color: white;
+    background-color: #B71C1C; /* الأحمر الداكن */
+    border: none;
+    border-radius: 20px;
+    width: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    margin-left: 25%;
+}
+
+button:hover {
+    background-color: #9E1B1B;
+    transform: scale(1.05);
+}
+
+/* عرض كود العضوية ورمز QR */
+.output {
+    display: none;
+    text-align: center;
+}
+
+/* جعل كود العضوية بخط عريض */
+.bold-text {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #B71C1C;
+}
+
+/* تصميم رمز QR */
+.qr-code {
+    margin: 20px auto;
+}
+
+/* الحقول و الأزرار متماثلة في الحجم */
+input, select, button {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* تحسين العرض على الشاشات الصغيرة */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+    button {
+        width: 100%;
+    }
+}
