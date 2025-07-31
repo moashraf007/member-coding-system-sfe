@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أسرة طلاب من أجل مصر - جامعة أسوان</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1A3E72;
+            --secondary-color: #E31B23;
+            --accent-color: #F8D117;
+            --light-bg: #F7F9FC;
+            --dark-text: #2c3e50;
+            --light-text: #5a6a7a;
+            --border-radius: 20px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        html { scroll-padding-top: 100px; }
+        body { font-family: 'Tajawal', sans-serif; color: var(--dark-text); background-color: var(--light-bg); line-height: 1.7; overflow-x: hidden; opacity: 0; transition: opacity 0.6s ease-in; }
+        body.loaded { opacity: 1; }
+        
+        .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 2.5rem; max-width: 1400px; margin: 0 auto; }
+        .logo { display: flex; align-items: center; text-decoration: none; }
+        .logo img { height: 60px; margin-left: 12px; }
+        .logo span { color: var(--dark-text); font-weight: 800; font-size: 1.6rem; }
+        .nav-links { display: flex; align-items: center; }
+        .nav-links a, .nav-links .nav-item { text-decoration: none; color: var(--dark-text); margin: 0 0.2rem; padding: 0.5rem 1rem; border-radius: 50px; transition: var(--transition); font-weight: 500; cursor: pointer; }
+        .nav-links a:hover, .nav-links .nav-item:hover, .nav-item-dropdown:hover > .nav-item { color: var(--primary-color); background: rgba(26, 62, 114, 0.05); }
+        .dropdown-menu { display: none; position: absolute; top: 100%; right: 0; background-color: white; min-width: 220px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); z-index: 1; border-radius: 12px; padding: 0.5rem 0; animation: fadeInDown 0.3s ease; border: 1px solid #f0f0f0; }
+        .dropdown-menu span, .dropdown-menu a { display: block; padding: 0.8rem 1.5rem; color: var(--dark-text); text-decoration: none; text-align: right; }
+        .nav-item-dropdown { position: relative; }
+        .nav-item-dropdown:hover .dropdown-menu { display: block; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .hamburger { display: none; background: none; border: none; font-size: 1.5rem; color: var(--primary-color); cursor: pointer; }
+        
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 2rem; background: linear-gradient(135deg, #F7F9FC 0%, #E8EDF5 100%); text-align: center; }
+        .hero-content { z-index: 2; display: flex; flex-direction: column; align-items: center; }
+        .hero-logo-container { margin-bottom: 2rem; animation: hero-logo-entry 1s ease-out 0.5s both; }
+        .hero-logo-container img { width: 220px; height: auto; max-width: 60vw; }
+        @keyframes hero-logo-entry { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .hero-title { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 1rem; color: var(--primary-color); font-weight: 800; animation: text-entry 0.8s ease-out 1s both; }
+        .hero-subtitle { font-size: clamp(1.1rem, 2.5vw, 1.4rem); margin-bottom: 2.5rem; color: var(--light-text); max-width: 600px; animation: text-entry 0.8s ease-out 1.2s both; }
+        .hero-buttons { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; animation: text-entry 0.8s ease-out 1.4s both; }
+        @keyframes text-entry { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .btn-primary, .btn-secondary { padding: 1rem 2.5rem; border-radius: 50px; font-weight: 700; transition: var(--transition); cursor: pointer; display: inline-block; }
+        .btn-primary { background-color: var(--secondary-color); color: white; border: 2px solid var(--secondary-color); }
+        .btn-secondary { background-color: white; color: var(--primary-color); border: 2px solid var(--primary-color); }
+        
+        .content-section { padding: 5rem 2rem; }
+        .section-title { font-size: 2.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 3rem; text-align: center; }
+        .section-title::after { content: ''; display: block; margin: 0.5rem auto 0; width: 100px; height: 5px; background: linear-gradient(to right, var(--secondary-color), var(--accent-color)); border-radius: 3px; }
+        .reveal { opacity: 0; transform: translateY(50px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        
+        /* Styles for TABS and ACCORDIONS */
+        .tabs-container { text-align: center; margin-bottom: 3rem; }
+        .tab-btn { background: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); padding: 0.8rem 2rem; margin: 0 0.5rem; border-radius: 50px; font-weight: 700; cursor: pointer; transition: var(--transition); }
+        .tab-btn.active { background: var(--primary-color); color: white; }
+        .tab-content { display: none; animation: fadeIn 0.5s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to: { opacity: 1; } }
+
+        /* Structure & Coordinators Section Styles */
+        .structure-grid, .coordinators-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; max-width: 1200px; margin: 2rem auto; }
+        .member-card { background: #fff; padding: 2rem 1.5rem; text-align: center; border-radius: var(--border-radius); box-shadow: var(--box-shadow); border-bottom: 4px solid var(--primary-color); }
+        .member-card img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; border: 4px solid var(--accent-color); }
+        .member-card h3 { font-size: 1.25rem; color: var(--primary-color); }
+        .year-title { font-size: 1.8rem; text-align: center; color: var(--primary-color); margin-top: 3rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--secondary-color); padding-bottom: 0.5rem; display: inline-block; }
+        .coordinators-container { text-align: center; }
+        
+        .committees-container { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
+        .committee-card { background: #fff; border-radius: var(--border-radius); box-shadow: 0 4px 20px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #eee; }
+        .committee-header { padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+        .committee-title { display: flex; align-items: center; gap: 1.5rem; font-size: 1.5rem; font-weight: 700; }
+        .committee-title .faculty-name { display: flex; flex-direction: column; line-height: 1.3; }
+        .committee-title .faculty-name-en { font-size: 0.9rem; font-weight: 500; color: var(--light-text); }
+        .committee-icon { font-size: 2rem; color: var(--secondary-color); width: 40px; text-align: center; }
+        .toggle-icon { font-size: 1.5rem; color: var(--light-text); transition: transform 0.4s ease; }
+        .committee-header.active .toggle-icon { transform: rotate(45deg); }
+        .committee-body { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
+        .committee-content { padding: 1.5rem 2rem 2rem; border-top: 1px solid #eee; }
+        .committee-content ul { list-style-position: inside; padding-right: 1rem; margin:0; list-style-type: none; }
+        .committee-content h4 { margin-bottom: 1rem; font-size: 1.2rem; color: var(--dark-text); }
+        .committee-content p { margin-bottom: 0.5rem; }
+
+        /* Family Activities Accordion Styles */
+        .family-activities-container { max-width: 900px; margin: 0 auto; }
+        .year-accordion, .month-accordion { margin-bottom: 1rem; border-radius: var(--border-radius); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); background: white; }
+        .year-header, .month-header { padding: 1.2rem 2rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
+        .year-header { background: var(--primary-color); color: white; font-size: 1.5rem; }
+        .month-header { background: #f7f9fc; font-size: 1.2rem; }
+        .year-header i, .month-header i { transition: transform 0.3s ease; }
+        .year-header.active i, .month-header.active i { transform: rotate(180deg); }
+        .year-body, .month-body { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
+        .year-body { padding: 0.5rem 1rem; background: #fafafa; }
+        .month-body ul { list-style-type: none; padding: 1.5rem 2rem; margin:0; }
+        .month-body ul li { padding-right: 1.5rem; position: relative; }
+        .month-body ul li::before { content: '✔'; position: absolute; right: 0; top: 0; color: var(--secondary-color); }
+
+        /* News Section Styles */
+        #know-activities-section, #coordinators-section, #news-section { background: #F0F4F8; }
+        .news-carousel { display: flex; gap: 2rem; overflow-x: auto; padding-bottom: 1.5rem; max-width: 1200px; margin: auto; scroll-snap-type: x mandatory; }
+        .news-item { min-width: 320px; background: white; padding: 1.5rem; border-top: 5px solid var(--secondary-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); scroll-snap-align: start;}
+        .news-date { color: var(--secondary-color); font-weight: 700; margin-bottom: 0.5rem; }
+        
+        #contact-section { background: white; }
+        .contact-container { max-width: 800px; margin: auto; background: white; padding: 3rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center; }
+        .contact-info h3 { font-size: 1.8rem; margin-bottom: 2rem; color: var(--primary-color); }
+        .contact-info ul { list-style: none; margin-top: 1.5rem; display: inline-block; text-align: right; }
+        .contact-info li { display: flex; align-items: center; margin-bottom: 1.5rem; font-size: 1.2rem; }
+        .contact-info i { font-size: 1.8rem; color: var(--primary-color); margin-left: 1.5rem; width: 30px; }
+        .social-icons { margin-top: 2.5rem; }
+        .social-icons a { color: var(--primary-color); font-size: 2rem; margin: 0 1rem; transition: var(--transition); }
+        .social-icons a:hover { color: var(--secondary-color); transform: scale(1.1); }
+        
+        .main-footer { background: var(--dark-text); color: white; padding: 2rem; text-align: center; }
+        
+        .modal { display: none; position: fixed; z-index: 1100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(26, 62, 114, 0.5); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
+        .modal-content { background-color: #fff; padding: 35px 45px; border-radius: var(--border-radius); max-width: 600px; width: 90%; position: relative; animation: slideIn 0.5s ease; }
+        @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        @media (max-width: 1024px) {
+            .nav-links { display: none; position: absolute; top: 100%; right: 0; width: 100%; background: white; flex-direction: column; padding: 1rem; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+            .nav-links.active { display: flex; }
+            .nav-links .nav-item { width: 100%; text-align: right; padding: 1rem 1.5rem; }
+            .nav-item-dropdown:hover .dropdown-menu { display: none; }
+            .nav-item-dropdown .dropdown-menu { position: static; display: none; width: 100%; box-shadow: none; border: none; padding: 0; background: #f8f9fa; }
+            .nav-item-dropdown .dropdown-menu.mobile-active { display: block; }
+            .nav-item-dropdown .dropdown-menu a, .nav-item-dropdown .dropdown-menu span { padding-right: 2.5rem; }
+            .hamburger { display: block; }
+        }
+    </style>
+</head>
+<body class="not-loaded">
+    <!-- Navigation Bar -->
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <a href="#hero-section" class="logo">
+                <img src="https://i.ibb.co/jk796nCQ/logo-removebg-preview-1.png" alt="شعار أسرة من أجل مصر">
+                <span>من أجل مصر</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <div class="nav-item-dropdown">
+                    <span class="nav-item">الصفحة الرئيسة <i class="fas fa-chevron-down fa-xs"></i></span>
+                    <div class="dropdown-menu">
+                        <span onclick="showAboutModal()">احنا مين</span>
+                        <span onclick="showJoinModal()">انضم لنا</span>
+                        <hr style="margin: 0.5rem 0; border-color: #eee;">
+                        <a href="#structure-section">الهيكل</a>
+                        <a href="#coordinators-section">منسقي العموم</a>
+                        <a href="#know-activities-section">اعرف الأنشطة</a>
+                        <a href="#activities-section">أرشيف الأنشطة</a>
+                        <a href="#news-section">الأخبار</a>
+                        <a href="#contact-section">تواصل معنا</a>
+                    </div>
+                </div>
+                <a href="#structure-section" class="nav-item">الهيكل</a>
+                <a href="#coordinators-section" class="nav-item">منسقي العموم</a>
+                <a href="#know-activities-section" class="nav-item">اعرف الأنشطة</a>
+                <a href="#activities-section" class="nav-item">أرشيف الأنشطة</a>
+                <a href="#membership-code-section" class="nav-item">كود العضوية</a>
+                <a href="#news-section" class="nav-item">الأخبار</a>
+                <a href="#contact-section" class="nav-item">تواصل معنا</a>
+            </div>
+            <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero-section">
+        <div class="hero-content">
+            <div class="hero-logo-container"><img src="https://i.ibb.co/jk796nCQ/logo-removebg-preview-1.png" alt="شعار أسرة من أجل مصر بحجم كبير"></div>
+            <h1 class="hero-title">نصنع المستقبل معًا</h1>
+            <p class="hero-subtitle">أسرة طلابية تعمل من أجل تنمية الوطن ورفعة شأنه، من خلال بناء مجتمع طلابي قوي ومبتكر.</p>
+            <div class="hero-buttons">
+                <span class="btn-primary" onclick="showJoinModal()">انضم إلينا الآن</span>
+                <span class="btn-secondary" onclick="showAboutModal()">اعرف المزيد عنا</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- الهيكل التنظيمي -->
+    <section id="structure-section" class="content-section reveal">
+        <h2 class="section-title">الهيكل التنظيمي</h2>
+        <div class="tabs-container" id="structure-tabs-container">
+            <button class="tab-btn active" data-tab="board-tab">مجلس الإدارة</button>
+            <button class="tab-btn" data-tab="committees-tab">اللجان</button>
+            <button class="tab-btn" data-tab="faculties-tab">الكليات</button>
+        </div>
+        <div id="board-tab" class="tab-content active">
+            <div class="structure-grid">
+                <div class="member-card"><img src="https://via.placeholder.com/150/1A3E72/FFFFFF?text=A" alt="صورة عضو"><h3>أحمد محمود</h3><p>رئيس الأسرة</p></div>
+                <div class="member-card"><img src="https://via.placeholder.com/150/E31B23/FFFFFF?text=F" alt="صورة عضو"><h3>فاطمة علي</h3><p>نائب الرئيس</p></div>
+                <div class="member-card"><img src="https://via.placeholder.com/150/F8D117/000000?text=M" alt="صورة عضو"><h3>محمد حسين</h3><p>أمين الصندوق</p></div>
+                <div class="member-card"><img src="https://via.placeholder.com/150/1A3E72/FFFFFF?text=S" alt="صورة عضو"><h3>سارة إبراهيم</h3><p>مسؤول الإعلام</p></div>
+            </div>
+        </div>
+        <div id="committees-tab" class="tab-content">
+            <div class="committees-container">
+                 <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-dumbbell committee-icon"></i><span>النشاط الرياضي</span></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><h4>أعضاء اللجنة</h4><p><strong>أمين اللجنة:</strong> أحمد خالد</p><p><strong>مساعد الأمين:</strong> محمد سامي</p></div></div></div>
+                 <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-book-open committee-icon"></i><span>النشاط الثقافي</span></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><h4>أعضاء اللجنة</h4><p><strong>أمين اللجنة:</strong> فاطمة محمود</p><p><strong>مساعد الأمين:</strong> منى عبد الرحمن</p></div></div></div>
+                 <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-palette committee-icon"></i><span>النشاط الفني</span></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><h4>أعضاء اللجنة</h4><p><strong>أمين اللجنة:</strong> يوسف علاء</p><p><strong>مساعد الأمين:</strong> آية مصطفى</p></div></div></div>
+                 <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-compass committee-icon"></i><span>الجوالة والخدمة العامة</span></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><h4>أعضاء اللجنة</h4><p><strong>أمين اللجنة:</strong> كريم عبد الله</p><p><strong>مساعد الأمين:</strong> علي حسن</p></div></div></div>
+                 <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-users committee-icon"></i><span>النشاط الاجتماعي والرحلات</span></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><h4>أعضاء اللجنة</h4><p><strong>أمين اللجنة:</strong> سارة أحمد</p><p><strong>مساعد الأمين:</strong> ندى حسين</p></div></div></div>
+                 <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-flask committee-icon"></i><span>النشاط العلمي والتكنولوجي</span></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><h4>أعضاء اللجنة</h4><p><strong>أمين اللجنة:</strong> عمر ياسر</p><p><strong>مساعد الأمين:</strong> ريم خالد</p></div></div></div>
+            </div>
+        </div>
+        <div id="faculties-tab" class="tab-content">
+             <div class="committees-container">
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-landmark committee-icon"></i> <div class="faculty-name"><span>كلية الآداب</span><span class="faculty-name-en">Faculty of Arts</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. هالة مصطفى</p><p><strong>نائب المنسق:</strong> أ. محمد الطيب</p><p><strong>أمين الأنشطة:</strong> فريدة عصام</p><p><strong>مساعد الأمين:</strong> كريم عبد الحليم</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> علاء رجب</li><li><strong>HR:</strong> سلمى صابر</li><li><strong>PR:</strong> يوسف طه</li><li><strong>OR:</strong> دعاء كمال</li><li><strong>ثقافية:</strong> آية ممدوح</li><li><strong>علمية:</strong> هشام حسن</li><li><strong>فنية:</strong> شيماء جمال</li><li><strong>تدريب:</strong> عبد الله زين</li><li><strong>ميديا:</strong> سارة الشناوي</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-chart-line committee-icon"></i> <div class="faculty-name"><span>كلية التجارة</span><span class="faculty-name-en">Faculty of Commerce</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. عصام عبد العزيز</p><p><strong>نائب المنسق:</strong> أ. إيمان يسري</p><p><strong>أمين الأنشطة:</strong> محمد عبد الرحمن</p><p><strong>مساعد الأمين:</strong> مي أحمد</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> أدهم سامي</li><li><strong>HR:</strong> ندى عبد اللطيف</li><li><strong>PR:</strong> عمر مختار</li><li><strong>OR:</strong> أمل خالد</li><li><strong>ثقافية:</strong> لينا مراد</li><li><strong>علمية:</strong> رامي محمد</li><li><strong>فنية:</strong> يارا محمود</li><li><strong>تدريب:</strong> أحمد مجدي</li><li><strong>ميديا:</strong> نهى تامر</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-book-quran committee-icon"></i> <div class="faculty-name"><span>كلية دار العلوم</span><span class="faculty-name-en">Faculty of Dar El-Ulum</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. طارق حسين</p><p><strong>نائب المنسق:</strong> أ. نجلاء علي</p><p><strong>أمين الأنشطة:</strong> زياد محمود</p><p><strong>مساعد الأمين:</strong> منة حسين</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> محمود رزق</li><li><strong>HR:</strong> علا جمال</li><li><strong>PR:</strong> عمرو سامي</li><li><strong>OR:</strong> رحمة سعيد</li><li><strong>ثقافية:</strong> محمد كمال</li><li><strong>علمية:</strong> هبة محمد</li><li><strong>فنية:</strong> نورهان عبد الغني</li><li><strong>تدريب:</strong> طه صبري</li><li><strong>ميديا:</strong> سلمى يسري</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-language committee-icon"></i> <div class="faculty-name"><span>كلية الألسن</span><span class="faculty-name-en">Faculty of Al-Alsun</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. ريم فؤاد</p><p><strong>نائب المنسق:</strong> أ. هشام عبد القادر</p><p><strong>أمين الأنشطة:</strong> نيرمين وليد</p><p><strong>مساعد الأمين:</strong> إبراهيم نادر</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> مريم صابر</li><li><strong>HR:</strong> فارس يوسف</li><li><strong>PR:</strong> علياء محمود</li><li><strong>OR:</strong> سامي عادل</li><li><strong>ثقافية:</strong> سلوى عبد الفتاح</li><li><strong>علمية:</strong> ريم أشرف</li><li><strong>فنية:</strong> إسلام عبد الحفيظ</li><li><strong>تدريب:</strong> هاني محمد</li><li><strong>ميديا:</strong> جهاد مجدي</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-hands-helping committee-icon"></i> <div class="faculty-name"><span>كلية الخدمة الاجتماعية</span><span class="faculty-name-en">Faculty of Social Work</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. عبد الله فتحي</p><p><strong>نائب المنسق:</strong> أ. رنا عبد الغني</p><p><strong>أمين الأنشطة:</strong> يوسف شريف</p><p><strong>مساعد الأمين:</strong> نوران إبراهيم</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> أحمد الغزالي</li><li><strong>HR:</strong> دينا مجدي</li><li><strong>PR:</strong> حسين عبد الرحمن</li><li><strong>OR:</strong> ليلى خالد</li><li><strong>ثقافية:</strong> هاجر حلمي</li><li><strong>علمية:</strong> ملك مصطفى</li><li><strong>فنية:</strong> ندى طارق</li><li><strong>تدريب:</strong> حمزة عبد العزيز</li><li><strong>ميديا:</strong> شيرين فؤاد</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-chalkboard-teacher committee-icon"></i> <div class="faculty-name"><span>كلية التربية</span><span class="faculty-name-en">Faculty of Education</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. نهى يسري</p><p><strong>نائب المنسق:</strong> أ. مصطفى حسن</p><p><strong>أمين الأنشطة:</strong> رانيا أحمد</p><p><strong>مساعد الأمين:</strong> ياسين عماد</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> مروان عبد الحليم</li><li><strong>HR:</strong> شهد إبراهيم</li><li><strong>PR:</strong> سيف محمد</li><li><strong>OR:</strong> تسنيم يحيى</li><li><strong>ثقافية:</strong> هالة نبيل</li><li><strong>علمية:</strong> كريم ياسر</li><li><strong>فنية:</strong> داليا حسين</li><li><strong>تدريب:</strong> محمد صلاح</li><li><strong>ميديا:</strong> نادين أشرف</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-futbol committee-icon"></i> <div class="faculty-name"><span>كلية التربية الرياضية</span><span class="faculty-name-en">Faculty of Physical Education</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. وليد الشرقاوي</p><p><strong>نائب المنسق:</strong> أ. شيماء عادل</p><p><strong>أمين الأنشطة:</strong> زياد سامي</p><p><strong>مساعد الأمين:</strong> هنا خالد</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> محمد منصور</li><li><strong>HR:</strong> روان علاء</li><li><strong>PR:</strong> فارس عماد</li><li><strong>OR:</strong> دينا ياسر</li><li><strong>ثقافية:</strong> هاجر محمد</li><li><strong>علمية:</strong> سيف الدين عبد الله</li><li><strong>فنية:</strong> منة الله صابر</li><li><strong>تدريب:</strong> كريم أحمد</li><li><strong>ميديا:</strong> لينا تامر</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-gavel committee-icon"></i> <div class="faculty-name"><span>كلية الحقوق</span><span class="faculty-name-en">Faculty of Law</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. مصطفى كمال</p><p><strong>نائب المنسق:</strong> أ. إسراء ناجي</p><p><strong>أمين الأنشطة:</strong> حسين طارق</p><p><strong>مساعد الأمين:</strong> ريم مصطفى</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> عبد الرحمن علوي</li><li><strong>HR:</strong> فاطمة زين</li><li><strong>PR:</strong> محمد بدر</li><li><strong>OR:</strong> ندى محمد</li><li><strong>ثقافية:</strong> عمر الجوهري</li><li><strong>علمية:</strong> يارا عماد</li><li><strong>فنية:</strong> آية يوسف</li><li><strong>تدريب:</strong> أيمن حسن</li><li><strong>ميديا:</strong> رنا عزت</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-palette committee-icon"></i> <div class="faculty-name"><span>كلية التربية النوعية</span><span class="faculty-name-en">Faculty of Specialized Education</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. هناء عادل</p><p><strong>نائب المنسق:</strong> أ. حسام عبد التواب</p><p><strong>أمين الأنشطة:</strong> منى محمود</p><p><strong>مساعد الأمين:</strong> خالد عبد الستار</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> أحمد عزمي</li><li><strong>HR:</strong> ياسمين نبيل</li><li><strong>PR:</strong> أمير رضا</li><li><strong>OR:</strong> داليا ناصر</li><li><strong>ثقافية:</strong> سمية عبد العظيم</li><li><strong>علمية:</strong> هاني جلال</li><li><strong>فنية:</strong> روان السيد</li><li><strong>تدريب:</strong> كريم عبد الفتاح</li><li><strong>ميديا:</strong> شاهندة هشام</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-gem committee-icon"></i> <div class="faculty-name"><span>كلية الآثار</span><span class="faculty-name-en">Faculty of Archaeology</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. فؤاد محمود</p><p><strong>نائب المنسق:</strong> أ. بسمة صلاح</p><p><strong>أمين الأنشطة:</strong> محمد زكريا</p><p><strong>مساعد الأمين:</strong> سلمى لطفي</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> سامح عبد الرؤوف</li><li><strong>HR:</strong> شروق ياسر</li><li><strong>PR:</strong> أحمد ربيع</li><li><strong>OR:</strong> فريدة محسن</li><li><strong>ثقافية:</strong> نهى رضا</li><li><strong>علمية:</strong> طارق محمود</li><li><strong>فنية:</strong> رانيا حسين</li><li><strong>تدريب:</strong> عبد الله يحيى</li><li><strong>ميديا:</strong> علياء حسن</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-cogs committee-icon"></i> <div class="faculty-name"><span>كلية الهندسة</span><span class="faculty-name-en">Faculty of Engineering</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. عمرو نجيب</p><p><strong>نائب المنسق:</strong> أ. إيمان منصور</p><p><strong>أمين الأنشطة:</strong> أحمد طه</p><p><strong>مساعد الأمين:</strong> نادين علي</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> زياد عاطف</li><li><strong>HR:</strong> نور محمد</li><li><strong>PR:</strong> أدهم عبد العزيز</li><li><strong>OR:</strong> منة عبد الله</li><li><strong>ثقافية:</strong> سلمى مجدي</li><li><strong>علمية:</strong> ياسر أحمد</li><li><strong>فنية:</strong> آية ناصر</li><li><strong>تدريب:</strong> حازم هاني</li><li><strong>ميديا:</strong> ندى خالد</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-bolt committee-icon"></i> <div class="faculty-name"><span>كلية هندسة الطاقة</span><span class="faculty-name-en">Faculty of Energy Engineering</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. علي عبد المقصود</p><p><strong>نائب المنسق:</strong> أ. رحاب محمود</p><p><strong>أمين الأنشطة:</strong> محمود عصام</p><p><strong>مساعد الأمين:</strong> يمنى إبراهيم</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> هيثم عادل</li><li><strong>HR:</strong> سارة عبد العزيز</li><li><strong>PR:</strong> يوسف رمزي</li><li><strong>OR:</strong> مي شريف</li><li><strong>ثقافية:</strong> أروى أحمد</li><li><strong>علمية:</strong> محمد بركات</li><li><strong>فنية:</strong> إيمان توفيق</li><li><strong>تدريب:</strong> عماد عبد الله</li><li><strong>ميديا:</strong> هدير طه</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-user-md committee-icon"></i> <div class="faculty-name"><span>كلية الطب البشري</span><span class="faculty-name-en">Faculty of Medicine</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. منال عبد الرازق</p><p><strong>نائب المنسق:</strong> أ. أحمد خليل</p><p><strong>أمين الأنشطة:</strong> مريم حسن</p><p><strong>مساعد الأمين:</strong> شريف وليد</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> عمر عبد الجواد</li><li><strong>HR:</strong> هبة رامي</li><li><strong>PR:</strong> محمد علاء</li><li><strong>OR:</strong> إيناس يوسف</li><li><strong>ثقافية:</strong> جنى إيهاب</li><li><strong>علمية:</strong> عمرو عبد الرحمن</li><li><strong>فنية:</strong> سلمى مدحت</li><li><strong>تدريب:</strong> مصطفى صابر</li><li><strong>ميديا:</strong> روان إبراهيم</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-briefcase-medical committee-icon"></i> <div class="faculty-name"><span>كلية التمريض</span><span class="faculty-name-en">Faculty of Nursing</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. نادية عبد الحميد</p><p><strong>نائب المنسق:</strong> أ. محمد بسيوني</p><p><strong>أمين الأنشطة:</strong> دينا عبد السلام</p><p><strong>مساعد الأمين:</strong> فؤاد كريم</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> كريم عبد المنعم</li><li><strong>HR:</strong> ملك حسن</li><li><strong>PR:</strong> مينا أشرف</li><li><strong>OR:</strong> شيماء إسماعيل</li><li><strong>ثقافية:</strong> حنين ناصر</li><li><strong>علمية:</strong> مازن عبد العزيز</li><li><strong>فنية:</strong> ولاء هاني</li><li><strong>تدريب:</strong> أيمن زكريا</li><li><strong>ميديا:</strong> هنا تيمور</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-paw committee-icon"></i> <div class="faculty-name"><span>كلية الطب البيطري</span><span class="faculty-name-en">Faculty of Veterinary Medicine</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. سامي فوزي</p><p><strong>نائب المنسق:</strong> أ. نسرين عبد السلام</p><p><strong>أمين الأنشطة:</strong> إسلام عادل</p><p><strong>مساعد الأمين:</strong> جنى حسين</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> ياسر شعبان</li><li><strong>HR:</strong> علا عبد الحكيم</li><li><strong>PR:</strong> محمود عز</li><li><strong>OR:</strong> مروة عبد الستار</li><li><strong>ثقافية:</strong> هبة عبد المجيد</li><li><strong>علمية:</strong> حسام يوسف</li><li><strong>فنية:</strong> نادين ياسر</li><li><strong>تدريب:</strong> طه ناصر</li><li><strong>ميديا:</strong> أميرة وليد</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-seedling committee-icon"></i> <div class="faculty-name"><span>كلية الزراعة والموارد الطبيعية</span><span class="faculty-name-en">Faculty of Agriculture & Natural Resources</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. كمال أحمد</p><p><strong>نائب المنسق:</strong> أ. سلمى أنور</p><p><strong>أمين الأنشطة:</strong> ياسين رأفت</p><p><strong>مساعد الأمين:</strong> هنا أشرف</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> فادي حسني</li><li><strong>HR:</strong> شروق طارق</li><li><strong>PR:</strong> أدهم نبيل</li><li><strong>OR:</strong> نجلاء عبد العال</li><li><strong>ثقافية:</strong> سمر توفيق</li><li><strong>علمية:</strong> هاني عبد العظيم</li><li><strong>فنية:</strong> جميلة محمد</li><li><strong>تدريب:</strong> عبد الرحمن عادل</li><li><strong>ميديا:</strong> هالة إسماعيل</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-flask committee-icon"></i> <div class="faculty-name"><span>كلية العلوم</span><span class="faculty-name-en">Faculty of Science</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. مروة الشاذلي</p><p><strong>نائب المنسق:</strong> أ. عمر عادل</p><p><strong>أمين الأنشطة:</strong> ندى رضا</p><p><strong>مساعد الأمين:</strong> حسام الدين شعبان</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> مازن عطية</li><li><strong>HR:</strong> رحمة عبد السلام</li><li><strong>PR:</strong> أحمد حلمي</li><li><strong>OR:</strong> شهد مصطفى</li><li><strong>ثقافية:</strong> دينا محمد</li><li><strong>علمية:</strong> سامح علواني</li><li><strong>فنية:</strong> ملك هشام</li><li><strong>تدريب:</strong> عمر مجدي</li><li><strong>ميديا:</strong> فاطمة طه</li></ul></div></div></div>
+                <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-fish committee-icon"></i> <div class="faculty-name"><span>كلية تكنولوجيا المصايد والأسماك</span><span class="faculty-name-en">Faculty of Fish & Fisheries Technology</span></div></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><p><strong>المنسق:</strong> د. عصمت يسري</p><p><strong>نائب المنسق:</strong> أ. دعاء عبد الحليم</p><p><strong>أمين الأنشطة:</strong> مصطفى نور</p><p><strong>مساعد الأمين:</strong> سارة وائل</p><hr style="margin: 1rem 0;"><h4>اللجان:</h4><ul><li><strong>جوالة:</strong> عمرو زين</li><li><strong>HR:</strong> مريم نجيب</li><li><strong>PR:</strong> يوسف محمد</li><li><strong>OR:</strong> نادين فؤاد</li><li><strong>ثقافية:</strong> زينب أيمن</li><li><strong>علمية:</strong> أمير محمود</li><li><strong>فنية:</strong> ليلى مرسي</li><li><strong>تدريب:</strong> حسن جابر</li><li><strong>ميديا:</strong> ريم عبد الرحمن</li></ul></div></div></div>
+             </div>
+        </div>
+    </section>
+
+    <!-- منسقي العموم -->
+    <section id="coordinators-section" class="content-section reveal">
+        <h2 class="section-title">منسقي العموم</h2>
+        <div class="coordinators-container">
+            <h3 class="year-title">2026</h3>
+            <div class="coordinators-grid" style="grid-template-columns: minmax(220px, 1fr);">
+                 <div class="member-card"><img src="https://via.placeholder.com/150/1A3E72/FFFFFF?text=C" alt="صورة منسق 2026"><h3>منسق عام 2026</h3></div>
+            </div>
+            <h3 class="year-title">2025</h3>
+            <div class="coordinators-grid">
+                 <div class="member-card"><img src="https://via.placeholder.com/150/1A3E72/FFFFFF?text=C1" alt="صورة منسق 2025"><h3>منسق 1</h3></div>
+                 <div class="member-card"><img src="https://via.placeholder.com/150/1A3E72/FFFFFF?text=C2" alt="صورة منسق 2025"><h3>منسق 2</h3></div>
+                 <div class="member-card"><img src="https://via.placeholder.com/150/1A3E72/FFFFFF?text=C3" alt="صورة منسق 2025"><h3>منسق 3</h3></div>
+                 <div class="member-card"><img src="https://via.placeholder.com/150/1A3E72/FFFFFF?text=C4" alt="صورة منسق 2025"><h3>منسق 4</h3></div>
+                 <div class="member-card"><img src="https://via.placeholder.com/150/1A3E72/FFFFFF?text=C5" alt="صورة منسق 2025"><h3>منسق 5</h3></div>
+            </div>
+             <h3 class="year-title">2024</h3>
+            <div class="coordinators-grid" style="grid-template-columns: minmax(220px, 1fr);">
+                 <div class="member-card"><img src="https://via.placeholder.com/150/E31B23/FFFFFF?text=C" alt="صورة منسق 2024"><h3>منسق عام 2024</h3></div>
+            </div>
+             <h3 class="year-title">2023</h3>
+            <div class="coordinators-grid" style="grid-template-columns: minmax(220px, 1fr);">
+                 <div class="member-card"><img src="https://via.placeholder.com/150/F8D117/000000?text=C" alt="صورة منسق 2023"><h3>منسق عام 2023</h3></div>
+            </div>
+             <h3 class="year-title">2022</h3>
+            <div class="coordinators-grid" style="grid-template-columns: minmax(220px, 1fr);">
+                 <div class="member-card"><img src="https://via.placeholder.com/150/1A3E72/FFFFFF?text=C" alt="صورة منسق 2022"><h3>منسق عام 2022</h3></div>
+            </div>
+             <h3 class="year-title">2021</h3>
+            <div class="coordinators-grid" style="grid-template-columns: minmax(220px, 1fr);">
+                 <div class="member-card"><img src="https://via.placeholder.com/150/E31B23/FFFFFF?text=C" alt="صورة منسق 2021"><h3>منسق عام 2021</h3></div>
+            </div>
+             <h3 class="year-title">2020</h3>
+            <div class="coordinators-grid" style="grid-template-columns: minmax(220px, 1fr);">
+                 <div class="member-card"><img src="https://via.placeholder.com/150/F8D117/000000?text=C" alt="صورة منسق 2020"><h3>منسق عام 2020</h3></div>
+            </div>
+             <h3 class="year-title">2019</h3>
+            <div class="coordinators-grid" style="grid-template-columns: minmax(220px, 1fr);">
+                 <div class="member-card"><img src="https://via.placeholder.com/150/1A3E72/FFFFFF?text=C" alt="صورة منسق 2019"><h3>منسق عام 2019</h3></div>
+            </div>
+             <h3 class="year-title">2018</h3>
+            <div class="coordinators-grid" style="grid-template-columns: minmax(220px, 1fr);">
+                 <div class="member-card"><img src="https://via.placeholder.com/150/E31B23/FFFFFF?text=C" alt="صورة منسق 2018"><h3>منسق عام 2018</h3></div>
+            </div>
+             <h3 class="year-title">2017</h3>
+            <div class="coordinators-grid" style="grid-template-columns: minmax(220px, 1fr);">
+                 <div class="member-card"><img src="https://via.placeholder.com/150/F8D117/000000?text=C" alt="صورة منسق 2017"><h3>منسق عام 2017</h3></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- اعرف الأنشطة -->
+    <section id="know-activities-section" class="content-section reveal">
+        <h2 class="section-title">اعرف الأنشطة</h2>
+        <div class="committees-container">
+            <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-dumbbell committee-icon"></i><span>النشاط الرياضي</span></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><ul><li>بث الروح الرياضية بين الطلاب، وتشجيع المواهب الرياضية والعمل على تنميتها.</li><li>تنظيم الدورات والمباريات والمسابقات والحفلات والمهرجانات الرياضية.</li></ul></div></div></div>
+            <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-book-open committee-icon"></i><span>النشاط الثقافي والإعلامي</span></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><ul><li>تنمية الوعي بقضايا الوطن بما يرسخ مفاهيم المواطنة والديمقراطية.</li><li>إطلاق طاقات الطلاب الفكرية والإبداعية والثقافية والمعلوماتية.</li></ul></div></div></div>
+            <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-palette committee-icon"></i><span>النشاط الفني</span></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><ul><li>العمل على الإرتقاء بالذوق العام وتنمية الحس الفني والجمالي لدى الطلاب.</li><li>تنمية وصقل المواهب الفنية للطلاب.</li></ul></div></div></div>
+            <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-compass committee-icon"></i><span>الجوالة والخدمة العامة</span></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><ul><li>تنمية مهارات القيادة والقدرة على تحمل المسؤولية والاعتماد على النفس.</li><li>تنفيذ معسكرات العمل وبرامج الخدمة العامة وخدمة البيئة والمجتمع.</li></ul></div></div></div>
+            <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-users committee-icon"></i><span>النشاط الاجتماعي والرحلات</span></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><ul><li>تنمية الروابط الاجتماعية بين الطلاب وبين أعضاء هيئة التدريس والعاملين.</li><li>تنظيم الرحلات والمعسكرات الاجتماعية، والثقافية والترفيهية.</li></ul></div></div></div>
+            <div class="committee-card"><div class="committee-header"><div class="committee-title"><i class="fas fa-flask committee-icon"></i><span>النشاط العلمي والتكنولوجي</span></div><i class="fas fa-plus toggle-icon"></i></div><div class="committee-body"><div class="committee-content"><ul><li>تشجيع الطلاب على البحث العلمي والمشاركة في الأنشطة العلمية.</li><li>عقد الندوات والمحاضرات والمؤتمرات العلمية بهدف تنمية القدرات العلمية والابتكارية.</li></ul></div></div></div>
+        </div>
+    </section>
+    
+    <!-- أرشيف الانشطة -->
+    <section id="activities-section" class="content-section reveal" style="background: white;">
+        <h2 class="section-title">أرشيف الأنشطة</h2>
+        <div class="family-activities-container">
+            <div class="year-accordion">
+                <div class="year-header"><h3>عام 2024</h3><i class="fas fa-chevron-down"></i></div>
+                <div class="year-body">
+                    <div class="month-accordion"><div class="month-header"><h4>يناير</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>لا توجد أنشطة مجدولة لهذا الشهر.</li></ul></div></div>
+                    <div class="month-accordion"><div class="month-header"><h4>فبراير</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>لا توجد أنشطة مجدولة لهذا الشهر.</li></ul></div></div>
+                    <div class="month-accordion"><div class="month-header"><h4>مارس</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>تنظيم ندوة عن "مستقبل الذكاء الاصطناعي".</li><li>إقامة معرض فني لعرض أعمال الطلاب الفنية.</li></ul></div></div>
+                    <div class="month-accordion"><div class="month-header"><h4>أبريل</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>تنظيم حملة تشجير داخل الحرم الجامعي بمناسبة يوم الأرض.</li></ul></div></div>
+                    <div class="month-accordion"><div class="month-header"><h4>مايو</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>إطلاق مسابقة ثقافية كبرى بين كليات الجامعة.</li><li>تنظيم رحلة ترفيهية إلى مدينة الفيوم.</li></ul></div></div>
+                    <div class="month-accordion"><div class="month-header"><h4>يونيو</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>لا توجد أنشطة مجدولة لهذا الشهر.</li></ul></div></div>
+                    <div class="month-accordion"><div class="month-header"><h4>يوليو</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>لا توجد أنشطة مجدولة لهذا الشهر.</li></ul></div></div>
+                    <div class="month-accordion"><div class="month-header"><h4>أغسطس</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>لا توجد أنشطة مجدولة لهذا الشهر.</li></ul></div></div>
+                    <div class="month-accordion"><div class="month-header"><h4>سبتمبر</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>لا توجد أنشطة مجدولة لهذا الشهر.</li></ul></div></div>
+                    <div class="month-accordion"><div class="month-header"><h4>أكتوبر</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>لا توجد أنشطة مجدولة لهذا الشهر.</li></ul></div></div>
+                    <div class="month-accordion"><div class="month-header"><h4>نوفمبر</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>لا توجد أنشطة مجدولة لهذا الشهر.</li></ul></div></div>
+                    <div class="month-accordion"><div class="month-header"><h4>ديسمبر</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>لا توجد أنشطة مجدولة لهذا الشهر.</li></ul></div></div>
+                </div>
+            </div>
+            <div class="year-accordion">
+                <div class="year-header"><h3>عام 2023</h3><i class="fas fa-chevron-down"></i></div>
+                <div class="year-body">
+                    <div class="month-accordion"><div class="month-header"><h4>أكتوبر</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>حفل استقبال الطلاب الجدد.</li><li>تنظيم دوري رياضي في كرة القدم.</li></ul></div></div>
+                    <div class="month-accordion"><div class="month-header"><h4>نوفمبر</h4><i class="fas fa-plus"></i></div><div class="month-body"><ul><li>حملة تبرع بالدم بالتعاون مع بنك الدم.</li><li>ورشة عمل عن مهارات العرض والتقديم.</li></ul></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- الاخبار -->
+    <section id="news-section" class="content-section reveal">
+        <h2 class="section-title">آخر الأخبار</h2>
+         <div class="news-carousel">
+            <div class="news-item"><div class="news-date">15 يونيو 2023</div><h3>الأسرة تنظم معسكرًا تدريبيًا</h3></div>
+            <div class="news-item"><div class="news-date">28 مايو 2023</div><h3>إطلاق مبادرة "شباب يتطوع"</h3></div>
+            <div class="news-item"><div class="news-date">10 مايو 2023</div><h3>لقاء مع وزير التعليم العالي</h3></div>
+        </div>
+    </section>
+
+    <!-- كود العضوية -->
+    <section id="membership-code-section" class="content-section reveal" style="background: linear-gradient(135deg, var(--primary-color), #2c3e50); color: white; text-align: center;">
+        <h2 class="section-title" style="color:white;">كود العضوية</h2>
+        <p style="font-size: 1.2rem; max-width: 600px; margin: -2rem auto 2.5rem;">استخدم هذا الرابط للوصول إلى صفحة كود العضوية الخاصة بك أو للتحقق من الأكواد.</p>
+        <a href="https://moashraf007.github.io/sfe-code/" target="_blank" class="btn-primary" style="background: var(--accent-color); color: var(--dark-text); font-size: 1.2rem;">الانتقال إلى صفحة الكود</a>
+    </section>
+    
+    <!-- تواصل معنا -->
+    <section id="contact-section" class="content-section reveal">
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3>تواصل معنا</h3>
+                <p>نسعد بتواصلكم معنا للاستفسارات أو المقترحات أو الشراكات.</p>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i><span>جامعة اسوان</span></li>
+                    <li><i class="fas fa-phone"></i><span>01012345678</span></li>
+                    <li><i class="fas fa-envelope"></i><span>sfeaswan@gmail.com</span></li>
+                </ul>
+                <div class="social-icons">
+                    <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <p>جميع الحقوق محفوظة لأسرة طلاب من أجل مصر جامعة اسوان - 2026</p>
+    </footer>
+
+    <!-- Modals -->
+    <div id="aboutModal" class="modal"><div class="modal-content"><h2>احنا مين</h2><p>نص تعريفي عن أسرة من أجل مصر...</p></div></div>
+    <div id="joinModal" class="modal"><div class="modal-content"><h2>انضم إلينا</h2><p>ضع هنا رابط أو استمارة الانضمام.</p></div></div>
+    <div id="underConstructionModal" class="modal"><div class="modal-content"><h2>قريباً...</h2><p>هذه الصفحة قيد الإنشاء.</p></div></div>
+
+    <script>
+       document.addEventListener('DOMContentLoaded', function() {
+            // Initial setup
+            setTimeout(() => { document.body.classList.add('loaded'); }, 100);
+            
+            // Intersection Observer for reveal animations
+            const revealElements = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+            }, { threshold: 0.1 });
+            revealElements.forEach(el => observer.observe(el));
+            
+            // --- Navigation Logic ---
+            const hamburger = document.getElementById('hamburgerBtn');
+            const navLinks = document.getElementById('navLinks');
+            
+            // Hamburger menu toggle
+            if (hamburger) {
+                hamburger.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                });
+            }
+
+            // Close mobile menu when a navigation link or a modal trigger is clicked
+            document.querySelectorAll('#navLinks a[href^="#"], .dropdown-menu span[onclick]').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 1024 && navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                    }
+                });
+            });
+
+            // Handle mobile dropdown toggle (for the parent item)
+            document.querySelectorAll('.nav-item-dropdown > .nav-item').forEach(dropdownToggle => {
+                dropdownToggle.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 1024) {
+                        e.preventDefault(); // Prevent page jump from parent item
+                        const dropdownMenu = this.nextElementSibling;
+                        // Close other open sub-menus
+                        document.querySelectorAll('.dropdown-menu.mobile-active').forEach(openMenu => {
+                            if (openMenu !== dropdownMenu) {
+                                openMenu.classList.remove('mobile-active');
+                            }
+                        });
+                        dropdownMenu.classList.toggle('mobile-active');
+                    }
+                });
+            });
+            
+            // --- Accordion Logic ---
+            function setupAccordion(containerSelector, headerSelector, bodySelector) {
+                const headers = document.querySelectorAll(`${containerSelector} ${headerSelector}`);
+                headers.forEach(header => {
+                    header.addEventListener('click', () => {
+                        const body = header.nextElementSibling;
+                        const wasActive = header.classList.contains('active');
+                        
+                        const parentContainer = header.closest(containerSelector);
+                        if (parentContainer) {
+                             parentContainer.querySelectorAll(`${headerSelector}.active`).forEach(activeHeader => {
+                                if (activeHeader !== header) {
+                                    activeHeader.classList.remove('active');
+                                    activeHeader.nextElementSibling.style.maxHeight = null;
+                                }
+                            });
+                        }
+                        
+                        if (!wasActive) {
+                             header.classList.add('active');
+                             body.style.maxHeight = body.scrollHeight + "px";
+                        } else {
+                            header.classList.remove('active');
+                            body.style.maxHeight = null;
+                        }
+                    });
+                });
+            }
+            
+            setupAccordion('#structure-section', '.committee-header', '.committee-body');
+            setupAccordion('#know-activities-section', '.committee-header', '.committee-body');
+            setupAccordion('.family-activities-container', '.year-header', '.year-body');
+            setupAccordion('.year-body', '.month-header', '.month-body');
+            
+            // --- Tab Logic ---
+            function setupTabs(containerId, contentContainerSelector) {
+                const tabButtons = document.querySelectorAll(`#${containerId} .tab-btn`);
+                const tabContents = document.querySelectorAll(`${contentContainerSelector} > .tab-content`);
+                
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        tabButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        const tabId = button.getAttribute('data-tab');
+                        
+                        tabContents.forEach(content => {
+                            content.classList.remove('active');
+                            if (content.id === tabId) {
+                                content.classList.add('active');
+                            }
+                        });
+
+                         if(tabId === 'faculties-tab' || tabId === 'committees-tab') {
+                             const activeAccordions = document.querySelectorAll(`#${tabId} .committee-header.active`);
+                             activeAccordions.forEach(header => {
+                                 header.classList.remove('active');
+                                 header.nextElementSibling.style.maxHeight = null;
+                             });
+                         }
+                    });
+                });
+            }
+
+            setupTabs('structure-tabs-container', '#structure-section');
+        });
+        
+        // --- Modal Functions ---
+        function showModal(modalId) { 
+            document.getElementById(modalId).style.display = 'flex'; 
+        }
+        const showAboutModal = () => showModal('aboutModal');
+        const showJoinModal = () => showModal('joinModal');
+        const showUnderConstructionModal = () => showModal('underConstructionModal');
+        
+        window.onclick = function(event) {
+            document.querySelectorAll('.modal').forEach(modal => { if (event.target == modal) { modal.style.display = "none"; } });
+        }
+    </script>
+</body>
+</html>
